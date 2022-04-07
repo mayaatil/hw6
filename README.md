@@ -6,7 +6,7 @@ The Weather Dashboard website meets accessibility standards to the uptmost degre
 
 ## Screenshot
 
-![The Weather Dashboard webpage includes a 5 day forecast of any city the user inputs, and provides information such as: UV index, temperature, wind, and humidity. There is an additioanl search history. ](./assets/images/06-server-side-apis-homework-demo.png)
+![The Weather Dashboard webpage includes a 5 day forecast of any city the user inputs, and provides information such as: UV index, temperature, wind, and humidity. There is an additioanl search history. ](./assets/images/screencapture-file-C-Users-mayas-code-hw6-index-html-2022-04-06-22_45_29.png)
 
 ## Links to Application
 

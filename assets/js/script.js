@@ -1,9 +1,11 @@
 // variables
 const searchedCities = JSON.parse(localStorage.getItem("cityHistory")) || [];
 
+let apiKey = "c8bf9352a7fc31b88f1966db48bcdf4f";
+
 // functions
 function handleCoords(searchCity) {
-  const fetchUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=4b9f7dc3f8536150bc0eb915e8e4a81b`;
+  const fetchUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`;
 
   fetch(fetchUrl)
     .then(function (response) {
@@ -26,7 +28,7 @@ function handleCurrentWeather(coordinates, city) {
   const lat = coordinates.lat;
   const lon = coordinates.lon;
 
-  const fetchUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=imperial&appid=4b9f7dc3f8536150bc0eb915e8e4a81b`;
+  const fetchUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=imperial&appid=${apiKey}`;
 
   fetch(fetchUrl)
     .then(function (response) {
@@ -46,21 +48,26 @@ function displayCurrentWeather(currentCityData, cityName) {
     "#currentWeather"
   ).innerHTML = `<h2 class="h2">${cityName}, ${moment
     .unix(currentCityData.dt)
-    .format("MMM Do YY")} <img src="${weatherIcon}"></h2> <div>Temp: ${
-    currentCityData.temp
-  } \xB0F</div> <div>Wind Speed: ${
+    .format(
+      "MMM Do YY"
+    )} <img src="${weatherIcon}"></h2><div>Weather forecast: ${
+    currentCityData.weather[0].description
+  } </div> <div>Temp: ${currentCityData.temp} \xB0F</div> <div>Wind Speed: ${
     currentCityData.wind_speed
   } MPH</div> <div>Humidity: ${
     currentCityData.humidity
-  }%</div> <div>UV Index: <span  id="uvi" >${currentCityData.uvi}</span></div>`;
+  }%</div> <div>UV Index: <span  id="uvi"  >${
+    currentCityData.uvi
+  }</span></div>`;
+
   //uvi
   let uviRay = currentCityData.uvi;
   if (uviRay <= 4) {
-    document.querySelector("#uvi").classList.add("Low", "bg-#00B74A");
+    document.querySelector("#uvi").classList.add("bg-success");
   } else if (uviRay <= 8 && uviCurrent >= 4) {
-    document.querySelector("#uvi").classList.add("Warning", "bg-#FFA900");
+    document.querySelector("#uvi").classList.add("bg-warning");
   } else {
-    document.querySelector("#uvi").classList.add("Danger", "bg-#F93154");
+    document.querySelector("#uvi").classList.add("bg-danger");
   }
 }
 
@@ -75,7 +82,13 @@ function displayFiveDayWeather(fiveDayCityData) {
       "#fiveDayWeather"
     ).innerHTML += `<div class="col-sm m-1 p-2 card"><div>${moment
       .unix(day.dt)
-      .format("MMM Do YY")}</div> <div><img src="${weatherIcon}"></div></div>`;
+      .format(
+        "MMM Do YY"
+      )}</div> <div><img src="${weatherIcon}"></div><div>Weather forecast: ${
+      day.weather[0].description
+    } </div> <div>High of: ${day.temp.max} \xB0F</div> <div>Wind Speed: ${
+      day.wind_speed
+    } MPH</div> <div>Humidity: ${day.humidity}%</div> </div>`;
   });
 }
 //addmore
@@ -85,13 +98,13 @@ function handleFormSubmit(event) {
   event.preventDefault();
 
   const city = document.querySelector("#searchInput").value.trim();
-  searchCities.push(city);
+  searchedCities.push(city);
 
   //filter
-  const filteredCities = searchCities.filter((city, index) => {
-    return searchCities.indexOf(city) === index;
+  const filteredCities = searchedCities.filter((city, index) => {
+    return searchedCities.indexOf(city) === index;
   });
-  localStorage.setItem("cityHistory", JSON.stringify(filteredSearchedCities));
+  localStorage.setItem("cityHistory", JSON.stringify(filteredCities));
 
   showHistory(filteredCities);
   handleCoords(city);
@@ -102,7 +115,7 @@ function showHistory(allCities) {
   allCities.forEach((city) => {
     document.querySelector(
       "#searchHistory"
-    ).innerHTML += `<button data-city="${city}">${city}</button>;`;
+    ).innerHTML += `<button class="btn btn-primary" data-city="${city}">${city}</button>`;
   });
 }
 
